@@ -40,7 +40,7 @@
 This example uses Postman and the default IP and Port from `terraform/_shared/globals/output.tf`.
 If you changed those, edit the URLs blow accordingly.
 
-1. Create a new request in Postman, e.g. GET http://192.168.178.42:8103/realms/user_facing/.well-known/openid-configuration
+1. Create a new request in Postman, GET http://192.168.178.42:8103/realms/user_facing/broker/idp/token
 2. Setup OAuth 2.0 token for this request with these settings
    - Grant Type: Authorization Code
    - Callback URL: https://oauth.pstmn.io/v1/callback
@@ -51,3 +51,7 @@ If you changed those, edit the URLs blow accordingly.
    1. Click "Get New Access Token" in Postman
    2. In the window that opens click the "idp" button below "Or sign in with"
    3. Enter Username `user` and Password `user` and click the "Sign In" button
+4. Use this token to execute the request to get the original id_token of the identity provider
+   1. Click "Proceed" after successful login
+   2. Click "Use Token" after selecting the new token
+   3. Click "Send" on the actual request

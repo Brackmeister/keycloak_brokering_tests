@@ -1,0 +1,11 @@
+version: "3.3"
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0.3
+    container_name: keycloak_brokering
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8103:8080"
+    entrypoint: /opt/keycloak/bin/kc.sh start-dev

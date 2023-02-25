@@ -43,7 +43,7 @@ If you changed those, edit the URLs blow accordingly.
 1. Create a new request in Postman, e.g. GET http://192.168.178.42:8103/realms/user_facing/.well-known/openid-configuration
 2. Setup OAuth 2.0 token for this request with these settings
    - Grant Type: Authorization Code
-   - Callback URL: http://192.168.178.42:8103/realms/user_facing/.well-known/openid-configuration
+   - Callback URL: https://oauth.pstmn.io/v1/callback
    - Auth URL: http://192.168.178.42:8103/realms/user_facing/protocol/openid-connect/auth
    - Access Token URL: http://192.168.178.42:8103/realms/user_facing/protocol/openid-connect/token
    - Client ID: frontend

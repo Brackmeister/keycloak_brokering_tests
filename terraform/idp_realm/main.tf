@@ -29,7 +29,9 @@ resource "keycloak_user" "user" {
   username = "user"
   enabled  = true
 
-  email = "user@example.com"
+  email      = "user@example.com"
+  first_name = "John"
+  last_name  = "Doe"
 
   initial_password {
     value     = "user"

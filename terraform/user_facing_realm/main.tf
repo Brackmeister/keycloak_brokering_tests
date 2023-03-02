@@ -25,6 +25,24 @@ resource "keycloak_oidc_identity_provider" "idp" {
   }
 }
 
+resource "keycloak_custom_identity_provider_mapper" "attribute_mapper" {
+  for_each = {
+    "firstName" : "firstName"
+    "lastName" : "lastName"
+  }
+
+  realm                    = module.realm.realm.id
+  name                     = "${each.key}-attribute-importer"
+  identity_provider_alias  = keycloak_oidc_identity_provider.idp.alias
+  identity_provider_mapper = "oidc-user-attribute-idp-mapper"
+
+  extra_config = {
+    syncMode         = "INHERIT"
+    claim            = each.key
+    "user.attribute" = each.value
+  }
+}
+
 resource "keycloak_openid_client" "frontend" {
   realm_id  = module.realm.realm.id
   client_id = "frontend"

@@ -37,6 +37,8 @@
 
 ## Test identity brokering
 
+### API
+
 This example uses Postman and the default IP and Port from `terraform/_shared/globals/output.tf`.
 If you changed those, edit the URLs blow accordingly.
 
@@ -55,3 +57,16 @@ If you changed those, edit the URLs blow accordingly.
    1. Click "Proceed" after successful login
    2. Click "Use Token" after selecting the new token
    3. Click "Send" on the actual request
+
+### Via browser
+
+1. Open http://192.168.178.42:8103/realms/user_facing/account
+2. Click "Sign in"
+3. Click "idp" in the "Or sign in with" section
+4. Enter "user" as both username and password and hit enter
+
+And as admin, use "admin/admin" when opening http://localhost:8103/admin/master/console/
+
+## Further information
+
+* https://registry.terraform.io/providers/mrparkers/keycloak/latest/docs

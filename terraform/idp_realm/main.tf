@@ -16,12 +16,24 @@ resource "keycloak_openid_client" "openid_client" {
   access_type              = "CONFIDENTIAL"
   client_secret            = "zBDg8ehQ0mHcxfNQgMdnYMdD3Zg35SEq"
   admin_url                = "http://${module.globals.ip}:${module.globals.port}/realms/user_facing/broker/idp/endpoint"
+  full_scope_allowed       = false
   service_accounts_enabled = true
   standard_flow_enabled    = true
   valid_redirect_uris      = [
     "http://${module.globals.ip}:${module.globals.port}/realms/user_facing/broker/idp/endpoint"
   ]
   login_theme = "keycloak"
+}
+
+resource "keycloak_openid_user_attribute_protocol_mapper" "group_attribute_to_roles_mapper" {
+  realm_id  = module.realm.realm.id
+  client_id = keycloak_openid_client.openid_client.id
+  name      = "group_attribute_to_roles_mapper"
+
+  user_attribute      = "group"
+  claim_name          = "realm_access.roles"
+  multivalued         = true
+  add_to_access_token = true
 }
 
 resource "keycloak_user" "user" {
@@ -32,6 +44,10 @@ resource "keycloak_user" "user" {
   email      = "user@example.com"
   first_name = "John"
   last_name  = "Doe"
+
+  attributes = {
+    group = "dyngrp1_role1##dyngrp1_role2##dyngrp2_role1"
+  }
 
   initial_password {
     value     = "user"

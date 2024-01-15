@@ -51,7 +51,7 @@ If you changed those, edit the URLs blow accordingly.
    - Client ID: frontend
 3. Get a token
    1. Click "Get New Access Token" in Postman
-   2. In the window that opens click the "idp" button below "Or sign in with"
+   2. In the window that opens click the "idp" or "keycloak-idp" button below "Or sign in with"
    3. Enter Username `user` and Password `user` and click the "Sign In" button
 4. Use this token to execute the request to get the original id_token of the identity provider
    1. Click "Proceed" after successful login
@@ -62,10 +62,16 @@ If you changed those, edit the URLs blow accordingly.
 
 1. Open http://192.168.178.42:8103/realms/user_facing/account
 2. Click "Sign in"
-3. Click "idp" in the "Or sign in with" section
+3. Click "idp" or "keycloak-idp" in the "Or sign in with" section
 4. Enter "user" as both username and password and hit enter
 
 And as admin, use "admin/admin" when opening http://localhost:8103/admin/master/console/
+
+"idp" will import the roles of the "idp_realm" into the user attribute "group".
+"keycloak-idp" will import the roles of the "idp_realm" into realm role assignments of the user.
+
+To see the actual token that transfers the roles from realm "idp_realm" to "user_facing_realm" during the identity brokering
+check the docker log.
 
 ## Further information
 

@@ -8,6 +8,7 @@ module "realm" {
   realm_name = "user_facing"
 }
 
+### IDP for group attribute
 resource "keycloak_oidc_identity_provider" "idp" {
   realm             = module.realm.realm.id
   alias             = "idp"
@@ -48,7 +49,7 @@ resource "keycloak_attribute_importer_identity_provider_mapper" "roles_to_group_
   realm                   = module.realm.realm.id
   name                    = "roles_to_group_attribute_mapper"
   // must match the claim name of keycloak_openid_user_attribute_protocol_mapper in the other realm
-  claim_name              = "roles"
+  claim_name              = "realm_access.roles"
   identity_provider_alias = keycloak_oidc_identity_provider.idp.alias
   user_attribute          = "group"
 
@@ -58,6 +59,81 @@ resource "keycloak_attribute_importer_identity_provider_mapper" "roles_to_group_
   }
 }
 
+### keycloak-oidc IDP for realm roles
+resource "keycloak_oidc_identity_provider" "keycloak-idp" {
+  realm             = module.realm.realm.id
+  provider_id       = "keycloak-oidc"
+  alias             = "keycloak-idp"
+  client_id         = "keycloak_client"
+  client_secret     = "zBDg8ehQ0mHcxfNQgMdnYMdD3Zg35SEq"
+  authorization_url = "http://${module.globals.ip}:${module.globals.port}/realms/identity_provider/protocol/openid-connect/auth"
+  token_url         = "http://${module.globals.ip}:${module.globals.port}/realms/identity_provider/protocol/openid-connect/token"
+
+  hide_on_login_page            = false
+  store_token                   = true
+  add_read_token_role_on_create = true
+  sync_mode                     = "FORCE" // otherwise removed roles won't be removed in this realm
+
+  extra_config = {
+    "clientAuthMethod" = "client_secret_post"
+  }
+}
+
+resource "keycloak_role" "dyngrp1_role1" {
+  realm_id    = module.realm.realm.id
+  name        = "dyngrp1_role1"
+}
+
+resource "keycloak_role" "dyngrp1_role2" {
+  realm_id    = module.realm.realm.id
+  name        = "dyngrp1_role2"
+}
+
+resource "keycloak_role" "dyngrp2_role1" {
+  realm_id    = module.realm.realm.id
+  name        = "dyngrp2_role1"
+}
+
+resource "keycloak_custom_identity_provider_mapper" "dyngrp1_role1" {
+  realm                    = module.realm.realm.id
+  identity_provider_alias  = keycloak_oidc_identity_provider.keycloak-idp.alias
+  identity_provider_mapper = "keycloak-oidc-role-to-role-idp-mapper"
+  name                     = "dyngrp1_role1"
+
+  extra_config = {
+    "external.role": "dyngrp1_role1",
+    "role": "dyngrp1_role1",
+    "syncMode": "INHERIT"
+  }
+}
+
+resource "keycloak_custom_identity_provider_mapper" "dyngrp1_role2" {
+  realm                    = module.realm.realm.id
+  identity_provider_alias  = keycloak_oidc_identity_provider.keycloak-idp.alias
+  identity_provider_mapper = "keycloak-oidc-role-to-role-idp-mapper"
+  name                     = "dyngrp1_role2"
+
+  extra_config = {
+    "external.role": "dyngrp1_role2",
+    "role": "dyngrp1_role2",
+    "syncMode": "INHERIT"
+  }
+}
+
+resource "keycloak_custom_identity_provider_mapper" "dyngrp2_role1" {
+  realm                    = module.realm.realm.id
+  identity_provider_alias  = keycloak_oidc_identity_provider.keycloak-idp.alias
+  identity_provider_mapper = "keycloak-oidc-role-to-role-idp-mapper"
+  name                     = "dyngrp2_role1"
+
+  extra_config = {
+    "external.role": "dyngrp2_role1",
+    "role": "dyngrp2_role1",
+    "syncMode": "INHERIT"
+  }
+}
+
+### frontend client
 resource "keycloak_openid_client" "frontend" {
   realm_id  = module.realm.realm.id
   client_id = "frontend"

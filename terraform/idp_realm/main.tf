@@ -8,7 +8,7 @@ module "realm" {
   realm_name = "identity_provider"
 }
 
-resource "keycloak_openid_client" "openid_client" {
+resource "keycloak_openid_client" "idp_client" {
   realm_id  = module.realm.realm.id
   client_id = "idp_client"
 
@@ -25,9 +25,37 @@ resource "keycloak_openid_client" "openid_client" {
   login_theme = "keycloak"
 }
 
-resource "keycloak_openid_user_attribute_protocol_mapper" "group_attribute_to_roles_mapper" {
+resource "keycloak_openid_user_attribute_protocol_mapper" "idp_group_attribute_to_roles_mapper" {
   realm_id  = module.realm.realm.id
-  client_id = keycloak_openid_client.openid_client.id
+  client_id = keycloak_openid_client.idp_client.id
+  name      = "group_attribute_to_roles_mapper"
+
+  user_attribute      = "group"
+  claim_name          = "realm_access.roles"
+  multivalued         = true
+  add_to_access_token = true
+}
+
+resource "keycloak_openid_client" "keycloak_client" {
+  realm_id  = module.realm.realm.id
+  client_id = "keycloak_client"
+
+  enabled                  = true
+  access_type              = "CONFIDENTIAL"
+  client_secret            = "zBDg8ehQ0mHcxfNQgMdnYMdD3Zg35SEq"
+  admin_url                = "http://${module.globals.ip}:${module.globals.port}/realms/user_facing/broker/keycloak-idp/endpoint"
+  full_scope_allowed       = false
+  service_accounts_enabled = true
+  standard_flow_enabled    = true
+  valid_redirect_uris      = [
+    "http://${module.globals.ip}:${module.globals.port}/realms/user_facing/broker/keycloak-idp/endpoint"
+  ]
+  login_theme = "keycloak"
+}
+
+resource "keycloak_openid_user_attribute_protocol_mapper" "keycloak_group_attribute_to_roles_mapper" {
+  realm_id  = module.realm.realm.id
+  client_id = keycloak_openid_client.keycloak_client.id
   name      = "group_attribute_to_roles_mapper"
 
   user_attribute      = "group"

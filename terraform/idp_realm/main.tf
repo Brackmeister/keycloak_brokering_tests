@@ -66,6 +66,41 @@ resource "keycloak_openid_user_attribute_protocol_mapper" "keycloak_group_attrib
   add_to_access_token = true
 }
 
+resource "keycloak_openid_client" "jwks_client" {
+  realm_id  = module.realm.realm.id
+  client_id = "jwks_client"
+
+  description               = "Uses client auth with realm key of target realm"
+  enabled                   = true
+  access_type               = "CONFIDENTIAL"
+  client_authenticator_type = "client-jwt"
+  admin_url                 = "http://host.docker.internal:${module.globals.port}/realms/user_facing/broker/jwks-idp/endpoint"
+  full_scope_allowed        = false
+  service_accounts_enabled  = true
+  standard_flow_enabled     = true
+  valid_redirect_uris = [
+    "http://host.docker.internal:${module.globals.port}/realms/user_facing/broker/jwks-idp/endpoint"
+  ]
+  login_theme = "keycloak"
+
+  extra_config = {
+    "token.endpoint.auth.signing.alg" = "RS256"
+    "jwks.url"                        = "http://host.docker.internal:${module.globals.port}/realms/user_facing/protocol/openid-connect/certs"
+    "use.jwks.url"                    = true
+  }
+}
+
+resource "keycloak_openid_user_attribute_protocol_mapper" "jwks_group_attribute_to_roles_mapper" {
+  realm_id  = module.realm.realm.id
+  client_id = keycloak_openid_client.jwks_client.id
+  name      = "group_attribute_to_roles_mapper"
+
+  user_attribute      = "group"
+  claim_name          = "realm_access.roles"
+  multivalued         = true
+  add_to_access_token = true
+}
+
 resource "keycloak_user" "user" {
   realm_id = module.realm.realm.id
   username = "user"

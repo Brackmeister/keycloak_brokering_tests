@@ -15,12 +15,12 @@ resource "keycloak_openid_client" "idp_client" {
   enabled                  = true
   access_type              = "CONFIDENTIAL"
   client_secret            = "zBDg8ehQ0mHcxfNQgMdnYMdD3Zg35SEq"
-  admin_url                = "http://${module.globals.ip}:${module.globals.port}/realms/user_facing/broker/idp/endpoint"
+  admin_url                = "http://host.docker.internal:${module.globals.port}/realms/user_facing/broker/idp/endpoint"
   full_scope_allowed       = false
   service_accounts_enabled = true
   standard_flow_enabled    = true
   valid_redirect_uris      = [
-    "http://${module.globals.ip}:${module.globals.port}/realms/user_facing/broker/idp/endpoint"
+    "http://host.docker.internal:${module.globals.port}/realms/user_facing/broker/idp/endpoint"
   ]
   login_theme = "keycloak"
 }
@@ -43,12 +43,12 @@ resource "keycloak_openid_client" "keycloak_client" {
   enabled                  = true
   access_type              = "CONFIDENTIAL"
   client_secret            = "zBDg8ehQ0mHcxfNQgMdnYMdD3Zg35SEq"
-  admin_url                = "http://${module.globals.ip}:${module.globals.port}/realms/user_facing/broker/keycloak-idp/endpoint"
+  admin_url                = "http://host.docker.internal:${module.globals.port}/realms/user_facing/broker/keycloak-idp/endpoint"
   full_scope_allowed       = false
   service_accounts_enabled = true
   standard_flow_enabled    = true
   valid_redirect_uris      = [
-    "http://${module.globals.ip}:${module.globals.port}/realms/user_facing/broker/keycloak-idp/endpoint"
+    "http://host.docker.internal:${module.globals.port}/realms/user_facing/broker/keycloak-idp/endpoint"
   ]
   login_theme = "keycloak"
 }

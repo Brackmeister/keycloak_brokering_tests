@@ -14,8 +14,8 @@ resource "keycloak_oidc_identity_provider" "idp" {
   alias             = "idp"
   client_id         = "idp_client"
   client_secret     = "zBDg8ehQ0mHcxfNQgMdnYMdD3Zg35SEq"
-  authorization_url = "http://${module.globals.ip}:${module.globals.port}/realms/identity_provider/protocol/openid-connect/auth"
-  token_url         = "http://${module.globals.ip}:${module.globals.port}/realms/identity_provider/protocol/openid-connect/token"
+  authorization_url = "http://host.docker.internal:${module.globals.port}/realms/identity_provider/protocol/openid-connect/auth"
+  token_url         = "http://host.docker.internal:${module.globals.port}/realms/identity_provider/protocol/openid-connect/token"
 
   hide_on_login_page            = false
   store_token                   = true
@@ -66,8 +66,8 @@ resource "keycloak_oidc_identity_provider" "keycloak-idp" {
   alias             = "keycloak-idp"
   client_id         = "keycloak_client"
   client_secret     = "zBDg8ehQ0mHcxfNQgMdnYMdD3Zg35SEq"
-  authorization_url = "http://${module.globals.ip}:${module.globals.port}/realms/identity_provider/protocol/openid-connect/auth"
-  token_url         = "http://${module.globals.ip}:${module.globals.port}/realms/identity_provider/protocol/openid-connect/token"
+  authorization_url = "http://host.docker.internal:${module.globals.port}/realms/identity_provider/protocol/openid-connect/auth"
+  token_url         = "http://host.docker.internal:${module.globals.port}/realms/identity_provider/protocol/openid-connect/token"
 
   hide_on_login_page            = false
   store_token                   = true
@@ -144,7 +144,7 @@ resource "keycloak_openid_client" "frontend" {
   full_scope_allowed    = false
   valid_redirect_uris   = [
     "https://oauth.pstmn.io/v1/callback",
-    "http://${module.globals.ip}:${module.globals.port}/realms/${module.realm.realm.realm}/*"
+    "http://host.docker.internal:${module.globals.port}/realms/${module.realm.realm.realm}/*"
   ]
   login_theme = "keycloak"
 }

@@ -1,4 +1,4 @@
-# Sample project to test kecloak identity brokering
+# Sample project to test keycloak identity brokering
 
 ## Local setup
 
@@ -10,12 +10,7 @@
    ```
    Wait a bit until the keycloak container is up and running.
    It's ready when `docker logs -f keycloak_brokering` shows "Running the server in development mode. DO NOT use this configuration in production."
-2. Set your local IP address by editing `terraform/_shared/globals/output.tf` 
-   ```
-   output "ip" {
-     value = "192.168.178.42" # use your local IP here
-   }
-
+2. Change the local port if necessary by editing `terraform/_shared/globals/output.tf` 
    output "port" {
      value = "8103" # only change if you need/want a different port
    }
@@ -42,12 +37,12 @@
 This example uses Postman and the default IP and Port from `terraform/_shared/globals/output.tf`.
 If you changed those, edit the URLs blow accordingly.
 
-1. Create a new request in Postman, GET http://192.168.178.42:8103/realms/user_facing/broker/idp/token
+1. Create a new request in Postman, GET http://host.docker.internal:8103/realms/user_facing/broker/idp/token
 2. Setup OAuth 2.0 token for this request with these settings
    - Grant Type: Authorization Code
    - Callback URL: https://oauth.pstmn.io/v1/callback
-   - Auth URL: http://192.168.178.42:8103/realms/user_facing/protocol/openid-connect/auth
-   - Access Token URL: http://192.168.178.42:8103/realms/user_facing/protocol/openid-connect/token
+   - Auth URL: http://host.docker.internal:8103/realms/user_facing/protocol/openid-connect/auth
+   - Access Token URL: http://host.docker.internal:8103/realms/user_facing/protocol/openid-connect/token
    - Client ID: frontend
 3. Get a token
    1. Click "Get New Access Token" in Postman
@@ -60,7 +55,7 @@ If you changed those, edit the URLs blow accordingly.
 
 ### Via browser
 
-1. Open http://192.168.178.42:8103/realms/user_facing/account
+1. Open http://host.docker.internal:8103/realms/user_facing/account
 2. Click "Sign in"
 3. Click "idp" or "keycloak-idp" in the "Or sign in with" section
 4. Enter "user" as both username and password and hit enter

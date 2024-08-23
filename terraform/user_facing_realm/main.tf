@@ -135,6 +135,40 @@ resource "keycloak_custom_identity_provider_mapper" "dyngrp2_role1" {
   }
 }
 
+### IDP that uses JWKS client auth
+resource "keycloak_oidc_identity_provider" "jwks" {
+  realm             = module.realm.realm.id
+  alias             = "jwks-idp"
+  display_name      = "Login using JWKS"
+  client_id         = "jwks_client"
+  client_secret     = "unused" // mandatory attribute in terraform provider but not necessary due to JWT auth
+  authorization_url = "http://host.docker.internal:${module.globals.port}/realms/identity_provider/protocol/openid-connect/auth"
+
+  token_url                     = "http://host.docker.internal:${module.globals.port}/realms/identity_provider/protocol/openid-connect/token"
+  hide_on_login_page            = false
+  store_token                   = true
+  add_read_token_role_on_create = true
+  sync_mode                     = "FORCE" // otherwise removed roles won't be removed in this realm
+
+  extra_config = {
+    "clientAuthMethod" = "private_key_jwt"
+  }
+}
+
+resource "keycloak_attribute_importer_identity_provider_mapper" "roles_to_group_attribute_mapper_jwks" {
+  realm                   = module.realm.realm.id
+  identity_provider_alias = keycloak_oidc_identity_provider.jwks.alias
+  name                    = "roles_to_group_attribute_mapper"
+  // must match the claim name of keycloak_openid_user_attribute_protocol_mapper in the other realm
+  claim_name     = "realm_access.roles"
+  user_attribute = "group"
+
+  # extra_config with syncMode is required in Keycloak 10+
+  extra_config = {
+    syncMode = "INHERIT"
+  }
+}
+
 ### frontend client
 resource "keycloak_openid_client" "frontend" {
   realm_id  = module.realm.realm.id

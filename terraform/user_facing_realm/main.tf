@@ -12,11 +12,12 @@ module "realm" {
 resource "keycloak_oidc_identity_provider" "idp" {
   realm             = module.realm.realm.id
   alias             = "idp"
+  display_name      = "Login with attributes"
   client_id         = "idp_client"
   client_secret     = "zBDg8ehQ0mHcxfNQgMdnYMdD3Zg35SEq"
   authorization_url = "http://host.docker.internal:${module.globals.port}/realms/identity_provider/protocol/openid-connect/auth"
-  token_url         = "http://host.docker.internal:${module.globals.port}/realms/identity_provider/protocol/openid-connect/token"
 
+  token_url         = "http://host.docker.internal:${module.globals.port}/realms/identity_provider/protocol/openid-connect/token"
   hide_on_login_page            = false
   store_token                   = true
   add_read_token_role_on_create = true
@@ -64,6 +65,7 @@ resource "keycloak_oidc_identity_provider" "keycloak-idp" {
   realm             = module.realm.realm.id
   provider_id       = "keycloak-oidc"
   alias             = "keycloak-idp"
+  display_name      = "Login with realm roles"
   client_id         = "keycloak_client"
   client_secret     = "zBDg8ehQ0mHcxfNQgMdnYMdD3Zg35SEq"
   authorization_url = "http://host.docker.internal:${module.globals.port}/realms/identity_provider/protocol/openid-connect/auth"

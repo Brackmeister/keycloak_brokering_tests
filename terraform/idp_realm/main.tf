@@ -12,6 +12,7 @@ resource "keycloak_openid_client" "idp_client" {
   realm_id  = module.realm.realm.id
   client_id = "idp_client"
 
+  description              = "Will be used to map roles to user attribute 'group' in target realm"
   enabled                  = true
   access_type              = "CONFIDENTIAL"
   client_secret            = "zBDg8ehQ0mHcxfNQgMdnYMdD3Zg35SEq"
@@ -40,6 +41,7 @@ resource "keycloak_openid_client" "keycloak_client" {
   realm_id  = module.realm.realm.id
   client_id = "keycloak_client"
 
+  description              = "Will be used to map roles to realm roles in target realm"
   enabled                  = true
   access_type              = "CONFIDENTIAL"
   client_secret            = "zBDg8ehQ0mHcxfNQgMdnYMdD3Zg35SEq"

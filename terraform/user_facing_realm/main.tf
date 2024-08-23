@@ -34,8 +34,8 @@ resource "keycloak_custom_identity_provider_mapper" "attribute_mapper" {
   }
 
   realm                    = module.realm.realm.id
-  name                     = "${each.key}-attribute-importer"
   identity_provider_alias  = keycloak_oidc_identity_provider.idp.alias
+  name                     = "${each.key}-attribute-importer"
   identity_provider_mapper = "oidc-user-attribute-idp-mapper"
 
   extra_config = {
@@ -47,10 +47,10 @@ resource "keycloak_custom_identity_provider_mapper" "attribute_mapper" {
 
 resource "keycloak_attribute_importer_identity_provider_mapper" "roles_to_group_attribute_mapper" {
   realm                   = module.realm.realm.id
+  identity_provider_alias = keycloak_oidc_identity_provider.idp.alias
   name                    = "roles_to_group_attribute_mapper"
   // must match the claim name of keycloak_openid_user_attribute_protocol_mapper in the other realm
   claim_name              = "realm_access.roles"
-  identity_provider_alias = keycloak_oidc_identity_provider.idp.alias
   user_attribute          = "group"
 
   # extra_config with syncMode is required in Keycloak 10+

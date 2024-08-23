@@ -20,7 +20,7 @@ resource "keycloak_openid_client" "idp_client" {
   full_scope_allowed       = false
   service_accounts_enabled = true
   standard_flow_enabled    = true
-  valid_redirect_uris      = [
+  valid_redirect_uris = [
     "http://host.docker.internal:${module.globals.port}/realms/user_facing/broker/idp/endpoint"
   ]
   login_theme = "keycloak"
@@ -49,7 +49,7 @@ resource "keycloak_openid_client" "keycloak_client" {
   full_scope_allowed       = false
   service_accounts_enabled = true
   standard_flow_enabled    = true
-  valid_redirect_uris      = [
+  valid_redirect_uris = [
     "http://host.docker.internal:${module.globals.port}/realms/user_facing/broker/keycloak-idp/endpoint"
   ]
   login_theme = "keycloak"

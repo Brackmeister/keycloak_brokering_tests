@@ -1,6 +1,6 @@
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:22.0.5
+    image: quay.io/keycloak/keycloak:26.1.5
     container_name: keycloak_brokering
     environment:
       KEYCLOAK_ADMIN: admin
@@ -8,3 +8,5 @@ services:
     ports:
       - "8103:8080"
     entrypoint: /opt/keycloak/bin/kc.sh start-dev --log-level="INFO,org.apache.http.headers:DEBUG,org.apache.http.wire:DEBUG"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

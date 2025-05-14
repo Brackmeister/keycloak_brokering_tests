@@ -1,6 +1,7 @@
 resource "keycloak_realm" "realm" {
-  realm   = var.realm_name
-  enabled = true
+  realm        = var.realm_name
+  enabled      = true
+  ssl_required = "none"
 }
 
 resource "keycloak_user" "realmadmin" {
